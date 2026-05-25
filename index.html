@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="VBM — Vanguard Bluewater Marine. Offshore drilling operations, deepwater expertise, and subsea integrity." />
+  <title>VBM | Vanguard Bluewater Marine — Offshore Oil Rig</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ocean-deep: #0a1628;
+      --ocean-mid: #122a4a;
+      --steel: #1e3a5f;
+      --flare: #f59e0b;
+      --flare-glow: #fbbf24;
+      --foam: #e8f4fc;
+      --mist: #94a3b8;
+      --signal: #22d3ee;
+      --danger: #ef4444;
+      --grid-line: rgba(34, 211, 238, 0.08);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "DM Sans", system-ui, sans-serif;
+      background: var(--ocean-deep);
+      color: var(--foam);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* Animated depth grid */
+    .depth-grid {
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 20%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wave-layer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 180px;
+      background: linear-gradient(transparent, rgba(10, 22, 40, 0.9));
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .wave-layer::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: -50%;
+      width: 200%;
+      height: 60px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60'%3E%3Cpath fill='%23122a4a' fill-opacity='0.6' d='M0,30 Q150,0 300,30 T600,30 T900,30 T1200,30 L1200,60 L0,60 Z'/%3E%3C/svg%3E") repeat-x;
+      background-size: 600px 60px;
+      animation: wave 12s linear infinite;
+    }
+
+    @keyframes wave {
+      to { transform: translateX(600px); }
+    }
+
+    /* Navigation */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: linear-gradient(to bottom, rgba(10, 22, 40, 0.95), transparent);
+      backdrop-filter: blur(8px);
+      transition: background 0.3s;
+    }
+
+    nav.scrolled {
+      background: rgba(10, 22, 40, 0.92);
+      border-bottom: 1px solid rgba(34, 211, 238, 0.15);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--foam);
+    }
+
+    .logo-mark {
+      width: 44px;
+      height: 44px;
+      position: relative;
+    }
+
+    .logo-mark svg { width: 100%; height: 100%; }
+
+    .logo-text {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.75rem;
+      letter-spacing: 0.12em;
+      line-height: 1;
+    }
+
+    .logo-sub {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      color: var(--signal);
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--mist);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--signal); }
+
+    .nav-cta {
+      padding: 0.6rem 1.25rem;
+      background: transparent;
+      border: 1px solid var(--flare);
+      color: var(--flare);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+
+    .nav-cta:hover {
+      background: var(--flare);
+      color: var(--ocean-deep);
+      box-shadow: 0 0 24px rgba(245, 158, 11, 0.4);
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 8rem 2.5rem 6rem;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+    }
+
+    .hero-bg img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 40%;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        105deg,
+        rgba(10, 22, 40, 0.94) 0%,
+        rgba(10, 22, 40, 0.82) 42%,
+        rgba(10, 22, 40, 0.55) 72%,
+        rgba(10, 22, 40, 0.35) 100%
+      );
+    }
+
+    .hero-content { max-width: 720px; position: relative; z-index: 2; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.9rem;
+      background: rgba(34, 211, 238, 0.1);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      border-radius: 2px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-badge .pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--signal);
+      border-radius: 50%;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    .hero h1 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(4rem, 12vw, 7.5rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      margin-bottom: 1rem;
+    }
+
+    .hero h1 span {
+      display: block;
+      color: var(--flare);
+      text-shadow: 0 0 60px rgba(245, 158, 11, 0.35);
+    }
+
+    .hero-tagline {
+      font-size: 1.15rem;
+      color: var(--mist);
+      max-width: 520px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .stat-item strong {
+      display: block;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 2.25rem;
+      color: var(--foam);
+      letter-spacing: 0.05em;
+    }
+
+    .stat-item span {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--mist);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 1rem 2rem;
+      background: var(--flare);
+      color: var(--ocean-deep);
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(245, 158, 11, 0.45);
+    }
+
+    .btn-secondary {
+      display: inline-block;
+      padding: 1rem 2rem;
+      border: 1px solid var(--mist);
+      color: var(--foam);
+      font-weight: 500;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--signal);
+      color: var(--signal);
+    }
+
+    /* Hero rig photo */
+    .hero-visual {
+      position: absolute;
+      right: 2.5rem;
+      top: 50%;
+      transform: translateY(-48%);
+      width: min(44vw, 480px);
+      z-index: 2;
+      border: 1px solid rgba(34, 211, 238, 0.25);
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-visual img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+    }
+
+    .hero-visual figcaption {
+      padding: 0.65rem 1rem;
+      background: rgba(18, 42, 74, 0.95);
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--signal);
+      border-top: 1px solid rgba(34, 211, 238, 0.2);
+    }
+
+    /* Field gallery */
+    .gallery-section {
+      max-width: none;
+      padding-left: 0;
+      padding-right: 0;
+      background: linear-gradient(180deg, transparent, rgba(18, 42, 74, 0.35), transparent);
+    }
+
+    .gallery-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      grid-template-rows: auto auto;
+      gap: 1rem;
+    }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      min-height: 220px;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.06);
+    }
+
+    .gallery-item .caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 2.5rem 1.25rem 1rem;
+      background: linear-gradient(transparent, rgba(10, 22, 40, 0.92));
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .gallery-item .caption span {
+      display: block;
+      font-size: 0.65rem;
+      color: var(--signal);
+      font-weight: 500;
+      margin-top: 0.2rem;
+    }
+
+    .gallery-item.featured {
+      grid-column: span 7;
+      grid-row: span 2;
+      min-height: 460px;
+    }
+
+    .gallery-item.wide { grid-column: span 5; min-height: 220px; }
+    .gallery-item.tall { grid-column: span 4; min-height: 280px; }
+    .gallery-item.square { grid-column: span 4; min-height: 220px; }
+
+    .about-feature-img {
+      margin-bottom: 2rem;
+      border: 1px solid rgba(34, 211, 238, 0.2);
+      overflow: hidden;
+    }
+
+    .about-feature-img img {
+      width: 100%;
+      height: 280px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .about-feature-img figcaption {
+      padding: 0.75rem 1rem;
+      background: var(--ocean-mid);
+      font-size: 0.75rem;
+      color: var(--mist);
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 1024px) {
+      .hero-visual {
+        position: relative;
+        right: auto;
+        top: auto;
+        transform: none;
+        width: 100%;
+        max-width: 420px;
+        margin: 3rem auto 0;
+      }
+      .hero { flex-direction: column; text-align: center; }
+      .hero-tagline, .hero-stats { margin-left: auto; margin-right: auto; }
+      .hero-actions { justify-content: center; }
+      .gallery-item.featured,
+      .gallery-item.wide,
+      .gallery-item.tall,
+      .gallery-item.square { grid-column: span 12; min-height: 240px; }
+      .gallery-item.featured { min-height: 300px; }
+    }
+
+    /* Sections */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 2.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--signal);
+      margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      letter-spacing: 0.04em;
+      margin-bottom: 2rem;
+    }
+
+    /* About */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    @media (max-width: 768px) {
+      .about-grid { grid-template-columns: 1fr; }
+    }
+
+    .about-text p {
+      color: var(--mist);
+      margin-bottom: 1rem;
+    }
+
+    .about-text p strong { color: var(--foam); }
+
+    .spec-card {
+      background: linear-gradient(135deg, var(--ocean-mid), var(--steel));
+      border: 1px solid rgba(34, 211, 238, 0.15);
+      padding: 1.75rem;
+    }
+
+    .spec-card h3 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.08em;
+      margin-bottom: 1rem;
+      color: var(--flare);
+    }
+
+    .spec-list {
+      list-style: none;
+    }
+
+    .spec-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+      font-size: 0.9rem;
+    }
+
+    .spec-list li:last-child { border-bottom: none; }
+
+    .spec-list li span:last-child {
+      color: var(--signal);
+      font-weight: 600;
+    }
+
+    /* Capabilities */
+    .capabilities {
+      background: linear-gradient(180deg, transparent, rgba(18, 42, 74, 0.5), transparent);
+      max-width: none;
+      padding-left: 0;
+      padding-right: 0;
+    }
+
+    .capabilities-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    .cap-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .cap-grid { grid-template-columns: 1fr; }
+    }
+
+    .cap-card {
+      background: var(--ocean-deep);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+      padding: 2rem;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+
+    .cap-card:hover {
+      border-color: var(--flare);
+      transform: translateY(-4px);
+    }
+
+    .cap-icon {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 1.25rem;
+      color: var(--flare);
+    }
+
+    .cap-card h3 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.35rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+
+    .cap-card p {
+      font-size: 0.9rem;
+      color: var(--mist);
+    }
+
+    /* Operations timeline */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+      border-left: 2px solid var(--steel);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-bottom: 2.5rem;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -2rem;
+      top: 0.35rem;
+      width: 12px;
+      height: 12px;
+      background: var(--flare);
+      border: 2px solid var(--ocean-deep);
+      transform: translateX(-5px);
+      box-shadow: 0 0 12px var(--flare);
+    }
+
+    .timeline-item h4 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.25rem;
+      letter-spacing: 0.06em;
+      margin-bottom: 0.35rem;
+    }
+
+    .timeline-item .year {
+      font-size: 0.75rem;
+      color: var(--signal);
+      letter-spacing: 0.1em;
+      margin-bottom: 0.5rem;
+    }
+
+    .timeline-item p {
+      font-size: 0.9rem;
+      color: var(--mist);
+    }
+
+    /* Safety banner */
+    .safety-banner {
+      max-width: 1200px;
+      margin: 0 auto 5rem;
+      padding: 0 2.5rem;
+    }
+
+    .safety-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      padding: 2rem 2.5rem;
+      background: linear-gradient(90deg, rgba(239, 68, 68, 0.12), rgba(245, 158, 11, 0.08));
+      border-left: 4px solid var(--flare);
+    }
+
+    .safety-inner h3 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.75rem;
+      letter-spacing: 0.06em;
+    }
+
+    .safety-inner p {
+      color: var(--mist);
+      font-size: 0.9rem;
+      max-width: 480px;
+    }
+
+    .safety-metric {
+      text-align: center;
+    }
+
+    .safety-metric strong {
+      display: block;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 3rem;
+      color: var(--flare);
+    }
+
+    .safety-metric span {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--mist);
+    }
+
+    /* Contact */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 3rem;
+    }
+
+    @media (max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+
+    .contact-info p {
+      color: var(--mist);
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-detail {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .contact-detail strong {
+      min-width: 90px;
+      color: var(--signal);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    form label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--mist);
+    }
+
+    form input,
+    form textarea,
+    form select {
+      padding: 0.85rem 1rem;
+      background: rgba(18, 42, 74, 0.6);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      color: var(--foam);
+      font-family: inherit;
+      font-size: 0.95rem;
+    }
+
+    form input:focus,
+    form textarea:focus,
+    form select:focus {
+      outline: none;
+      border-color: var(--signal);
+    }
+
+    form textarea { min-height: 120px; resize: vertical; }
+
+    form button {
+      align-self: flex-start;
+      padding: 1rem 2rem;
+      background: var(--flare);
+      border: none;
+      color: var(--ocean-deep);
+      font-weight: 600;
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: box-shadow 0.2s;
+    }
+
+    form button:hover {
+      box-shadow: 0 6px 24px rgba(245, 158, 11, 0.4);
+    }
+
+    /* Footer */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid rgba(148, 163, 184, 0.15);
+      padding: 2.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    footer p {
+      font-size: 0.8rem;
+      color: var(--mist);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--mist);
+      text-decoration: none;
+      font-size: 0.8rem;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--signal); }
+
+    .mobile-toggle {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--foam);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--ocean-deep);
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid rgba(34, 211, 238, 0.15);
+      }
+      .mobile-toggle { display: block; }
+      nav { padding: 1rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="depth-grid" aria-hidden="true"></div>
+  <div class="wave-layer" aria-hidden="true"></div>
+
+  <nav id="navbar">
+    <a href="#" class="logo">
+      <div class="logo-mark" aria-hidden="true">
+        <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="18" y="4" width="8" height="28" fill="#f59e0b"/>
+          <path d="M8 32 L22 12 L36 32 Z" stroke="#22d3ee" stroke-width="2" fill="none"/>
+          <rect x="6" y="32" width="32" height="4" fill="#1e3a5f"/>
+          <circle cx="22" cy="38" r="3" fill="#22d3ee"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">VBM</div>
+        <div class="logo-sub">Vanguard Bluewater Marine</div>
+      </div>
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#about">About</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#capabilities">Capabilities</a></li>
+      <li><a href="#operations">Operations</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#contact" class="nav-cta">Request Briefing</a>
+    <button class="mobile-toggle" id="menuToggle" aria-label="Toggle menu">☰</button>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-bg" aria-hidden="true">
+      <img
+        src="https://images.unsplash.com/photo-1518063168679-049d473cdaf1?w=1920&q=80"
+        alt=""
+        loading="eager"
+      />
+      <div class="hero-overlay"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="pulse"></span>
+        Rig Status: Active — North Atlantic Block 47
+      </div>
+      <h1>
+        VBM
+        <span>Deepwater. Defined.</span>
+      </h1>
+      <p class="hero-tagline">
+        Vanguard Bluewater Marine operates one of the industry's most capable semi-submersible platforms — engineered for harsh-environment drilling beyond 3,000 meters.
+      </p>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <strong>3,200m</strong>
+          <span>Max Water Depth</span>
+        </div>
+        <div class="stat-item">
+          <strong>12,500</strong>
+          <span>HP Drilling Package</span>
+        </div>
+        <div class="stat-item">
+          <strong>0.42</strong>
+          <span>TRIR (2025)</span>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a href="#capabilities" class="btn-primary">Explore Platform</a>
+        <a href="#operations" class="btn-secondary">View Operations</a>
+      </div>
+    </div>
+
+    <figure class="hero-visual">
+      <img
+        src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=960&q=80"
+        alt="Offshore oil rig drilling platform at work in open water"
+        loading="eager"
+      />
+      <figcaption>VBM — Active drilling operations</figcaption>
+    </figure>
+  </header>
+
+  <section id="about">
+    <p class="section-label">Platform Overview</p>
+    <h2 class="section-title">Built for the Blue Frontier</h2>
+    <div class="about-grid">
+      <div class="about-text">
+        <figure class="about-feature-img">
+          <img
+            src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=1200&q=80"
+            alt="Offshore oil platform at sunset during active field operations"
+            loading="lazy"
+          />
+          <figcaption>Semi-submersible operations — North Atlantic, 2025</figcaption>
+        </figure>
+        <p>
+          <strong>VBM (Vanguard Bluewater Marine)</strong> is a dynamically positioned semi-submersible drilling unit commissioned for ultra-deepwater campaigns. Named for its pioneering operator consortium, the rig combines sixth-generation drilling systems with integrated subsea production tie-back capability.
+        </p>
+        <p>
+          Stationed in the North Atlantic, VBM supports exploration and appraisal wells in water depths where conventional jack-ups cannot operate. Our crew of 180 specialists maintains 24/7 operations with full SIMOPS certification.
+        </p>
+        <p>
+          From well control to environmental monitoring, every system on VBM is designed around a single principle: <strong>precision under pressure.</strong>
+        </p>
+      </div>
+      <div class="spec-card">
+        <h3>Rig Specifications</h3>
+        <ul class="spec-list">
+          <li><span>Rig Type</span><span>Semi-Submersible</span></li>
+          <li><span>Year Built</span><span>2018 (Upgraded 2024)</span></li>
+          <li><span>Classification</span><span>DNV GL +1A1</span></li>
+          <li><span>BOP Rating</span><span>20,000 PSI</span></li>
+          <li><span>Mooring / DP</span><span>DP3 + 16-Point</span></li>
+          <li><span>Deck Load</span><span>18,500 tonnes</span></li>
+          <li><span>Quarters</span><span>180 POB</span></li>
+          <li><span>Helideck</span><span>Sikorsky S-92</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="gallery-section" id="gallery">
+    <div class="gallery-inner">
+      <p class="section-label">Field Operations</p>
+      <h2 class="section-title">Rigs at Work</h2>
+      <div class="gallery-grid">
+        <figure class="gallery-item featured">
+          <img
+            src="https://images.unsplash.com/photo-1518063168679-049d473cdaf1?w=1400&q=80"
+            alt="Offshore oil rig platform operating in open ocean"
+            loading="lazy"
+          />
+          <figcaption class="caption">
+            Drilling &amp; Completion
+            <span>24/7 rotary table operations — Block 47</span>
+          </figcaption>
+        </figure>
+        <figure class="gallery-item wide">
+          <img
+            src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=900&q=80"
+            alt="Offshore drilling rig with derrick and deck equipment at work"
+            loading="lazy"
+          />
+          <figcaption class="caption">
+            Platform Overview
+            <span>DP3 station-keeping on location</span>
+          </figcaption>
+        </figure>
+        <figure class="gallery-item tall">
+          <img
+            src="https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=800&q=80"
+            alt="Oil rig in the middle of the ocean at sunset during operations"
+            loading="lazy"
+          />
+          <figcaption class="caption">
+            Night Operations
+            <span>Continuous drilling — 180 POB on board</span>
+          </figcaption>
+        </figure>
+        <figure class="gallery-item square">
+          <img
+            src="https://images.unsplash.com/photo-1611273426858-450d8e129c66?w=800&q=80"
+            alt="Semi-submersible offshore platform over deep water"
+            loading="lazy"
+          />
+          <figcaption class="caption">
+            Deepwater Campaign
+            <span>3,200m water depth — North Atlantic</span>
+          </figcaption>
+        </figure>
+        <figure class="gallery-item square">
+          <img
+            src="https://images.unsplash.com/photo-1513828583688-c52646db42df?w=800&q=80"
+            alt="Offshore oil and gas platform with industrial equipment at sea"
+            loading="lazy"
+          />
+          <figcaption class="caption">
+            Open Ocean
+            <span>Exploration well — spud to TD</span>
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <div class="capabilities" id="capabilities">
+    <div class="capabilities-inner">
+      <p class="section-label">Core Competencies</p>
+      <h2 class="section-title">What VBM Delivers</h2>
+      <div class="cap-grid">
+        <article class="cap-card">
+          <svg class="cap-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="24" cy="24" r="18"/>
+            <path d="M24 6 L24 42 M6 24 L42 24"/>
+            <circle cx="24" cy="24" r="6"/>
+          </svg>
+          <h3>Ultra-Deepwater Drilling</h3>
+          <p>Extended-reach drilling with dual-activity derrick and automated pipe handling for wells beyond 7,500m TVD.</p>
+        </article>
+        <article class="cap-card">
+          <svg class="cap-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 40 L24 8 L40 40 Z"/>
+            <line x1="16" y1="28" x2="32" y2="28"/>
+          </svg>
+          <h3>Subsea Tie-Back</h3>
+          <p>Integrated riser and umbilical systems supporting simultaneous drilling and completion operations.</p>
+        </article>
+        <article class="cap-card">
+          <svg class="cap-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="6" y="14" width="36" height="24" rx="2"/>
+            <path d="M14 22 L22 30 L34 18"/>
+          </svg>
+          <h3>Well Control &amp; HSE</h3>
+          <p>Triple BOP stack, real-time kick detection, and ISO 45001-certified safety management across all shifts.</p>
+        </article>
+        <article class="cap-card">
+          <svg class="cap-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 36 Q24 8 36 36"/>
+            <circle cx="24" cy="28" r="4"/>
+          </svg>
+          <h3>Environmental Stewardship</h3>
+          <p>Zero-discharge policy, continuous emissions monitoring, and marine mammal observation protocols.</p>
+        </article>
+        <article class="cap-card">
+          <svg class="cap-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="10" y="18" width="28" height="22"/>
+            <path d="M16 18 L24 8 L32 18"/>
+          </svg>
+          <h3>Logistics &amp; Supply</h3>
+          <p>Helideck and PSV interface with automated bulk handling — 72-hour weather window operations.</p>
+        </article>
+        <article class="cap-card">
+          <svg class="cap-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 32 L24 12 L40 32"/>
+            <line x1="24" y1="12" x2="24" y2="42"/>
+          </svg>
+          <h3>Remote Operations</h3>
+          <p>Onshore support center with digital twin modeling for predictive maintenance and drilling optimization.</p>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <div class="safety-banner">
+    <div class="safety-inner">
+      <div>
+        <h3>Safety Is Non-Negotiable</h3>
+        <p>VBM maintains industry-leading safety metrics through STOP Work authority, daily toolbox talks, and continuous competency assessment for all personnel.</p>
+      </div>
+      <div class="safety-metric">
+        <strong>847</strong>
+        <span>Days LTI-Free</span>
+      </div>
+    </div>
+  </div>
+
+  <section id="operations">
+    <p class="section-label">Field History</p>
+    <h2 class="section-title">Operations Timeline</h2>
+    <div class="timeline">
+      <div class="timeline-item">
+        <p class="year">2026 — Present</p>
+        <h4>North Atlantic Block 47 — Exploration</h4>
+        <p>Appraisal drilling campaign targeting Lower Cretaceous reservoirs. Three wells planned; first well spudded Q1 2026.</p>
+      </div>
+      <div class="timeline-item">
+        <p class="year">2024 — 2025</p>
+        <h4>Flemish Pass Basin — Development</h4>
+        <p>Completed five producer wells with 98.2% uptime. Record ROP achieved on Well FP-12 at 4,200m water depth.</p>
+      </div>
+      <div class="timeline-item">
+        <p class="year">2022 — 2023</p>
+        <h4>West of Shetland — Wildcat</h4>
+        <p>Exploration program in harsh-environment conditions. Successfully tested new BOP control system upgrade.</p>
+      </div>
+      <div class="timeline-item">
+        <p class="year">2018</p>
+        <h4>Commissioning &amp; Sea Trials</h4>
+        <p>VBM delivered from Hyundai Heavy Industries. Achieved full classification and flag-state approval within 90 days.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <p class="section-label">Get in Touch</p>
+    <h2 class="section-title">Operations &amp; Commercial</h2>
+    <div class="contact-grid">
+      <div class="contact-info">
+        <p>For rig availability, tender submissions, or technical data packs, contact our commercial team at headquarters or the on-rig operations desk.</p>
+        <div class="contact-detail">
+          <strong>HQ</strong>
+          <span>Aberdeen Energy Park, Scotland AB12 3LG</span>
+        </div>
+        <div class="contact-detail">
+          <strong>Phone</strong>
+          <span>+44 (0) 1224 700 900</span>
+        </div>
+        <div class="contact-detail">
+          <strong>Email</strong>
+          <span>operations@vbm-offshore.com</span>
+        </div>
+        <div class="contact-detail">
+          <strong>MMSI</strong>
+          <span>235 847 000 (AIS Tracking)</span>
+        </div>
+      </div>
+      <form action="#" method="post" onsubmit="handleSubmit(event)">
+        <div>
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" required placeholder="Your name" />
+        </div>
+        <div>
+          <label for="company">Company</label>
+          <input type="text" id="company" name="company" placeholder="Operator / Contractor" />
+        </div>
+        <div>
+          <label for="inquiry">Inquiry Type</label>
+          <select id="inquiry" name="inquiry">
+            <option value="availability">Rig Availability</option>
+            <option value="technical">Technical Data Pack</option>
+            <option value="tender">Tender Submission</option>
+            <option value="media">Media / Press</option>
+          </select>
+        </div>
+        <div>
+          <label for="message">Message</label>
+          <textarea id="message" name="message" required placeholder="Describe your inquiry..."></textarea>
+        </div>
+        <button type="submit">Send Inquiry</button>
+      </form>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Vanguard Bluewater Marine (VBM). All rights reserved.</p>
+    <ul class="footer-links">
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">HSE Policy</a></li>
+      <li><a href="#">Careers</a></li>
+      <li><a href="#">AIS Tracker</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    const navbar = document.getElementById("navbar");
+    window.addEventListener("scroll", () => {
+      navbar.classList.toggle("scrolled", window.scrollY > 40);
+    });
+
+    document.getElementById("menuToggle").addEventListener("click", () => {
+      document.getElementById("navLinks").classList.toggle("open");
+    });
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      alert("Thank you. Your inquiry has been received by VBM Commercial Operations.");
+      e.target.reset();
+    }
+  </script>
+</body>
+</html>
