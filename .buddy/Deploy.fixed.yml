@@ -5,3 +5,65 @@
   fail_on_prepare_env_warning: true
   events:
   - type: WEBHOOK
+  actions:
+  - action: HTTP Request
+    type: HTTP
+    content: |-
+      {
+          "workspace": {
+              "url": "$BUDDY_WORKSPACE_URL",
+              "id": "$BUDDY_WORKSPACE_ID",
+              "name": "$BUDDY_WORKSPACE_NAME",
+              "domain": "$BUDDY_WORKSPACE_DOMAIN"
+          },
+          "invoker": {
+              "url": "$BUDDY_TRIGGERING_ACTOR_URL",
+              "id": "$BUDDY_TRIGGERING_ACTOR_ID",
+              "name": "$BUDDY_TRIGGERING_ACTOR",
+              "avatar_url": "$BUDDY_TRIGGERING_ACTOR_AVATAR_URL",
+              "email": "$BUDDY_TRIGGERING_ACTOR_EMAIL"
+          },
+          "project": {
+              "url": "$BUDDY_PROJECT_URL",
+              "name": "$BUDDY_PROJECT_NAME_ID",
+              "display_name": "$BUDDY_PROJECT_NAME"
+          },
+          "execution": {
+              "url": "$BUDDY_RUN_URL",
+              "id": "$BUDDY_RUN_ID",
+              "start_date": "$BUDDY_RUN_START_DATE",
+              "mode": "$BUDDY_RUN_MODE",
+              "clear_cache": "$BUDDY_RUN_CLEAR_CACHE",
+              "refresh": "$BUDDY_RUN_REFRESH",
+              "comment": "$BUDDY_RUN_COMMENT",
+              "branch": "$BUDDY_RUN_BRANCH",
+              "tag": "$BUDDY_RUN_TAG",
+              "from_revision": {
+                  "revision": "$BUDDY_RUN_PRE_COMMIT",
+                  "subject": "$BUDDY_RUN_PRE_COMMIT_SUBJECT"
+              },
+              "to_revision": {
+                  "url": "$BUDDY_RUN_COMMIT_URL",
+                  "revision": "$BUDDY_RUN_COMMIT",
+                  "subject": "$BUDDY_RUN_COMMIT_SUBJECT",
+                  "committer_email": "$BUDDY_RUN_COMMIT_COMMITTER_EMAIL"
+              },
+              "pipeline": {
+                  "url": "$BUDDY_PIPELINE_URL",
+                  "id": "$BUDDY_PIPELINE_ID",
+                  "name": "$BUDDY_PIPELINE_NAME",
+                  "ref_name": "$BUDDY_PIPELINE_REFS",
+                  "target_site_url": "$BUDDY_PIPELINE_PREVIEW_URL"
+              },
+              "failed_action": {
+                  "name": "$BUDDY_FAILED_ACTION_NAME",
+                  "logs": "$BUDDY_FAILED_ACTION_LOGS"
+              }
+          }
+      }
+    headers:
+    - name: User-Agent
+      value: Buddy
+    - name: Content-Type
+      value: application/json
+    notification_url: https://github.com/dmagflow22/RCROC
